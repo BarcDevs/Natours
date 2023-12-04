@@ -1,7 +1,10 @@
+if (!process.env.MONGODB_CONNECTION_URI) {
 // eslint-disable-next-line global-require
-if (!process.env.MONGODB_CONNECTION_URI) require('dotenv').config({ path: `${__dirname}/../.env` })
+  require('dotenv')
+    .config({ path: `${__dirname}/../.env` })
+}
 
-const db = require("../db")
+const db = require('../db')
 const { getToursFromFs } = require('./fs')
 const Tour = require('../db/tourModel')
 
@@ -14,8 +17,20 @@ const deleteAllData = async () => {
   }
 }
 
+const moveStartLocationToLocations = data => data.map(tour => {
+  const { startLocation } = tour
+  startLocation.day = 0
+  tour.locations.push(startLocation)
+  tour.startLocation = undefined
+  return tour
+})
+
 const importData = async () => {
-  const data = await getToursFromFs()
+  let data = await getToursFromFs()
+  if (Object.keys(data[0])
+    .includes('startLocation')) {
+    data = moveStartLocationToLocations(data)
+  }
 
   try {
     await Tour.create(data)
@@ -24,6 +39,7 @@ const importData = async () => {
     console.error(e)
   }
 }
+
 const script = async () => {
   const arg = process.argv[2]
 

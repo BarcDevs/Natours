@@ -8,8 +8,8 @@
     "start": "nodemon server.js",
     "dev": "nodemon NODE_ENV=development server.js",
     "debug": "ndb server.js",
-    "import-data": "node lib\\import-dev-data.js --import",
-    "delete-data": "node lib\\import-dev-data.js --delete"
+    "import-data": "node utils\\import-dev-data.js --import",
+    "delete-data": "node utils\\import-dev-data.js --delete"
   },
   "author": "bar",
   "license": "ISC",
