@@ -94,6 +94,31 @@ userSchema.pre(/^find/, function(next) {
 })
 //endregion
 
+//region Instance methods
+userSchema.methods.matchPasswords = async function(input, userPassword) {
+  return await bcrypt.compare(input, userPassword)
+}
+
+userSchema.methods.generateResetPasswordToken = function() {
+  const resetToken = crypto.randomBytes(32)
+    .toString('hex')
+
+  this.resetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex')
+
+  this.resetTokenExpired = addMinutes(Date.now(), 10)
+
+  return resetToken
+}
+
+userSchema.methods.resetPasswordResetToken = function() {
+  this.resetToken = undefined
+  this.resetTokenExpired = undefined
+}
+//endregion
+
 const User = model('User', userSchema)
 
 module.exports = User
