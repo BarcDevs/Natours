@@ -98,6 +98,8 @@ tourSchema.pre(/^find/, function(next) {
     path: 'guides',
     select: '-__v'
   })
+
+  next()
 })
 
 const Tour = model('Tour', tourSchema)
