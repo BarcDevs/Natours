@@ -25,8 +25,8 @@ const filterQuery = (query, urlQuery) => {
   return query.find(filter)
 }
 
-module.exports = async (model, urlQuery) => {
-  const query = model.find()
+module.exports = async (model, urlQuery, findBy = {}) => {
+  const query = model.find(findBy)
   paginate(
     filterQuery(query, urlQuery)
       .sort(urlQuery.sort?.replaceAll(',', ' ') || '-createdAt')
