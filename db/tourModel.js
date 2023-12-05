@@ -102,6 +102,12 @@ tourSchema.pre(/^find/, function(next) {
   next()
 })
 
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id'
+})
+
 const Tour = model('Tour', tourSchema)
 
 module.exports = Tour
