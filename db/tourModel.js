@@ -91,6 +91,9 @@ const tourSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   }
+}, {
+  toJSON: {virtuals: true},
+  toObject: {virtuals: true}
 })
 
 tourSchema.pre(/^find/, function(next) {

@@ -54,6 +54,9 @@ const userSchema = new Schema({
     default: true,
     select: false
   }
+}, {
+  toJSON: {virtuals: true},
+  toObject: {virtuals: true}
 })
 
 //region Middlewares
@@ -117,6 +120,14 @@ userSchema.methods.resetPasswordResetToken = function() {
   this.resetToken = undefined
   this.resetTokenExpired = undefined
 }
+//endregion
+
+//region Virtuals
+userSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'author',
+  localField: '_id'
+})
 //endregion
 
 const User = model('User', userSchema)

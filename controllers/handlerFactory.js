@@ -5,15 +5,17 @@ const {
 } = require('../utils/responses')
 const queryBuilder = require('../db/query')
 
-exports.getMany = (Model) => catchAsync(async (req, res, next) => {
-  const query = queryBuilder(Model, req.query, req.body)
+exports.getMany = (Model, populateOptions = undefined) => catchAsync(async (req, res, next) => {
+  const query = queryBuilder(Model, req.query, req.body, populateOptions)
   const docs = await query
 
   returnSuccess(res, { docs }, 200, { results: docs.length })
 })
 
-exports.getById = Model => catchAsync(async (req, res, next) => {
-  const doc = await Model.findById(req.params.id)
+exports.getById = (Model, populateOptions = undefined) => catchAsync(async (req, res, next) => {
+  const doc = await Model
+    .findById(req.params.id)
+    .populate(populateOptions)
 
   if (!doc) {
     return returnNotFound(next, req.params.id)

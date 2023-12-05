@@ -25,12 +25,14 @@ const filterQuery = (query, urlQuery) => {
   return query.find(filter)
 }
 
-module.exports = async (model, urlQuery, findBy = {}) => {
+module.exports = async (model, urlQuery, findBy = {}, populateOptions = undefined) => {
   const query = model.find(findBy)
+  console.log(populateOptions || undefined)
   paginate(
     filterQuery(query, urlQuery)
       .sort(urlQuery.sort?.replaceAll(',', ' ') || '-createdAt')
-      .select(urlQuery.fields?.replaceAll(',', ' ') || '-__v'),
+      .select(urlQuery.fields?.replaceAll(',', ' ') || '-__v')
+      .populate(populateOptions || undefined),
     urlQuery,
     await model.countDocuments()
   )

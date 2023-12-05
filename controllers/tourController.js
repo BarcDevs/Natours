@@ -17,7 +17,10 @@ exports.aliasTopTours = (req, res, next) => {
 
 exports.getTours = factory.getMany(Tour)
 
-exports.getTourById = factory.getById(Tour)
+exports.getTourById = factory.getById(Tour, {
+  path: 'reviews',
+  select: '-__v'
+})
 
 exports.createTour = factory.createOne(Tour)
 
