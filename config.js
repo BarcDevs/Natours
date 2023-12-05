@@ -2,7 +2,8 @@ const apiEndpoint = '/api/v1'
 
 exports.endpoints = {
   toursEndpoint: `${apiEndpoint}/tours`,
-  usersEndpoint: `${apiEndpoint}/users`
+  usersEndpoint: `${apiEndpoint}/users`,
+  reviewsEndpoint: `${apiEndpoint}/reviews`
 }
 
 exports.routes = {
@@ -21,6 +22,9 @@ exports.routes = {
 
     update: '/updateUser',
     delete: '/deleteUser'
+  },
+  reviewRoutes: {
+
   }
 }
 
