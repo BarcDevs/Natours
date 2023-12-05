@@ -75,7 +75,18 @@ const tourSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now()
-  }
+  },
+  locations: [{
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point'
+    },
+    day: Number,
+    coordinates: [Number],
+    address: String,
+    description: String
+  }]
 })
 
 const Tour = model('Tour', tourSchema)
