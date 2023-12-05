@@ -86,7 +86,18 @@ const tourSchema = new Schema({
     coordinates: [Number],
     address: String,
     description: String
-  }]
+  }],
+  guides: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  }
+})
+
+tourSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v'
+  })
 })
 
 const Tour = model('Tour', tourSchema)
