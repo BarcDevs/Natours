@@ -2,7 +2,10 @@ const express = require('express')
 const {
   getReviews,
   createReview,
-  getReviewById
+  getReviewById,
+  deleteReview,
+  completeReviewData,
+  addTourFilter
 } = require('../controllers/reviewController')
 const {
   protectRoute,
@@ -15,15 +18,20 @@ const router = express.Router({
 
 router
   .route('/')
-  .get(getReviews)
+  .get(
+    addTourFilter,
+    getReviews
+  )
   .post(
     protectRoute,
     restrictRoute('user'),
+    completeReviewData,
     createReview
   )
 
 router
   .route('/:id')
   .get(getReviewById)
+  .delete(protectRoute, deleteReview)
 
 module.exports = router
