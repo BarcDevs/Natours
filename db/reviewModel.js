@@ -36,6 +36,6 @@ const reviewSchema = new Schema({
   toObject: { virtuals: true }
 })
 
-const ReviewSchema = model('ReviewSchema', reviewSchema)
+const ReviewSchema = model('Review', reviewSchema)
 
 module.exports = ReviewSchema
