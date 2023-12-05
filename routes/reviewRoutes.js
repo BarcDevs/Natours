@@ -4,14 +4,21 @@ const {
   createReview,
   getReviewById
 } = require('../controllers/reviewController')
-const { protectRoute } = require('../controllers/authController')
+const {
+  protectRoute,
+  restrictRoute
+} = require('../controllers/authController')
 
 const router = express.Router()
 
 router
   .route('/')
   .get(getReviews)
-  .post(protectRoute, createReview)
+  .post(
+    protectRoute,
+    restrictRoute('user'),
+    createReview
+  )
 
 router
   .route('/:id')
