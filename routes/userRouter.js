@@ -6,10 +6,15 @@ const {
   resetPassword,
   updatePassword,
   protectRoute,
-  updateUserData,
-  deleteUser
+  restrictRoute
 } = require('../controllers/authController')
 const { routes: r } = require('../config')
+const {
+  deactivateUser,
+  getUsers,
+  updateUserData,
+  deleteUser
+} = require('../controllers/userController')
 
 const routes = r.userRoutes
 const router = express.Router()
@@ -23,11 +28,23 @@ router.post(routes.forgotPassword, forgotPassword)
 router.patch(routes.resetPassword, resetPassword)
 
 router.patch(routes.update, protectRoute, updateUserData)
-router.delete(routes.delete, protectRoute, deleteUser)
+router.delete(routes.delete, protectRoute, deactivateUser)
 
-// router
-//   .route('/')
-//   .get(getUsers)
+router
+  .route('/:id')
+  .delete(
+    protectRoute,
+    restrictRoute('admin'),
+    deleteUser
+  )
+
+router
+  .route('/')
+  .get(
+    protectRoute,
+    restrictRoute('admin'),
+    getUsers
+  )
 //   .post(createUser)
 //
 // router
