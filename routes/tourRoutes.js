@@ -14,9 +14,12 @@ const {
   protectRoute,
   restrictRoute
 } = require('../controllers/authController')
+const reviewRouter = require('./reviewRoutes')
 
 const routes = r.toursRoutes
 const router = express.Router()
+
+router.use('/:tourId/reviews', reviewRouter)
 
 router
   .route('/')
