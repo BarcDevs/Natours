@@ -7,7 +7,10 @@ const { xss } = require('express-xss-sanitizer')
 const morgan = require('morgan')
 const hpp = require('hpp')
 const config = require('./config')
-const { tourRouter } = require('./routes')
+const {
+  tourRouter,
+  reviewRouter
+} = require('./routes')
 const { userRouter } = require('./routes')
 const {
   notFound,
@@ -49,6 +52,7 @@ app.use(hpp({
 //region ROUTES
 app.use(endpoints.toursEndpoint, tourRouter)
 app.use(endpoints.usersEndpoint, userRouter)
+app.use(endpoints.reviewsEndpoint, reviewRouter)
 
 // not found handler
 app.all('*', notFound)
