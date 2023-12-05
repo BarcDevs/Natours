@@ -26,7 +26,7 @@ exports.getReviewById = catchAsync(async (req, res, next) => {
 exports.createReview = catchAsync(async (req, res, next) => {
   const review = await Review.create({
     ...req.body,
-    author: req.body.data?.user?._id
+    author: req.user?._id
   })
 
   returnSuccess(res, { review }, 201)

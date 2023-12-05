@@ -49,10 +49,6 @@ const checkPasswordChanged = (JWTTimeStamp, passwordTimeStamp) =>
 // eslint-disable-next-line implicit-arrow-linebreak
   (passwordTimeStamp.getTime() / 1000) > JWTTimeStamp
 
-// const generateResetPasswordToken = (user) => {
-//
-// }
-
 exports.signup = catchAsync(async (req, res) => {
   const newUser = await User.create({
     ...filterUser(req.body, ['password', 'passwordConfirm', ...allowedFields])
@@ -97,17 +93,12 @@ exports.protectRoute = catchAsync(async (req, res, next) => {
   }
 
   /* User authenticated */
-  req.body = {
-    ...req.body,
-    data: {
-      user
-    }
-  }
+  req.user = user
   next()
 })
 
 exports.restrictRoute = (...roles) => (req, res, next) => {
-  if (!roles.includes(req.body.data?.user?.role)) {
+  if (!roles.includes(req.user?.role)) {
     return next(new AppError(403, 'Access denied. You are not allowed to perform this action!'))
   }
 
@@ -201,7 +192,6 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
 exports.updateUserData = catchAsync(async (req, res, next) => {
   const {
-    data,
     password,
     passwordConfirm
   } = req.body
@@ -210,7 +200,7 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
     return next(new AppError(400, `This is not the route for changing password. please use ${routes.userRoutes.updatePassword}.`))
   }
 
-  const user = await User.findByIdAndUpdate(data.user?._id, {
+  const user = await User.findByIdAndUpdate(req.user?._id, {
     ...filterUser(req.body, allowedFields)
   }, {
     new: true,
@@ -221,7 +211,7 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
 })
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.body.data?.user?._id, {
+  await User.findByIdAndUpdate(req.user?._id, {
     active: false
   })
 
