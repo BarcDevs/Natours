@@ -1,7 +1,6 @@
 const Tour = require('../db/tourModel')
-const queryBuilder = require('../db/query')
 const { catchAsync } = require('./errorController')
-const AppError = require('../utils/AppError')
+const factory = require('./handlerFactory')
 const { returnSuccess } = require('../utils/responses')
 
 //region CONTROLLERS
@@ -16,60 +15,15 @@ exports.aliasTopTours = (req, res, next) => {
   next()
 }
 
-exports.getTours = catchAsync(async (req, res, next) => {
-  const query = queryBuilder(Tour, req.query)
-  const tours = await query
+exports.getTours = factory.getMany(Tour)
 
-  returnSuccess(res, { tours }, 200, { results: tours.length })
-})
+exports.getTourById = factory.getById(Tour)
 
-exports.getTourById = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.id)
+exports.createTour = factory.createOne(Tour)
 
-  if (!tour) {
-    return next(
-      new AppError(404, `No tour found for ID ${req.params.id}`)
-    )
-  }
+exports.updateTour = factory.updateOne(Tour)
 
-  returnSuccess(res, { tour })
-})
-
-exports.createTour = catchAsync(async (req, res, next) => {
-  const newTour = await Tour.create(req.body)
-
-  returnSuccess(res, { tour: newTour }, 201)
-})
-
-exports.updateTour = catchAsync(async (req, res, next) => {
-  const newChanges = req.body
-  const { id } = req.params
-
-  const tour = await Tour.findByIdAndUpdate(id, newChanges, {
-    new: true,
-    runValidators: true
-  })
-
-  if (!tour) {
-    return next(
-      new AppError(404, `No tour found for ID ${req.params.id}`)
-    )
-  }
-
-  returnSuccess(res, { tour }, 202)
-})
-
-exports.deleteTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findByIdAndDelete(req.params.id)
-
-  if (!tour) {
-    return next(
-      new AppError(404, `No tour found for ID ${req.params.id}`)
-    )
-  }
-
-  returnSuccess(res, {}, 204)
-})
+exports.deleteTour = factory.deleteOne(Tour)
 
 exports.getToursStats = catchAsync(async (req, res, next) => {
   const tourStats = await Tour.aggregate([
@@ -121,3 +75,4 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
 
   returnSuccess(res, { monthlyPlan }, 201)
 })
+//endregion

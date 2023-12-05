@@ -189,31 +189,3 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   returnSuccess(res, {}, 200, { message: 'password has changed successfully' })
 })
-
-exports.updateUserData = catchAsync(async (req, res, next) => {
-  const {
-    password,
-    passwordConfirm
-  } = req.body
-
-  if (password || passwordConfirm) {
-    return next(new AppError(400, `This is not the route for changing password. please use ${routes.userRoutes.updatePassword}.`))
-  }
-
-  const user = await User.findByIdAndUpdate(req.user?._id, {
-    ...filterUser(req.body, allowedFields)
-  }, {
-    new: true,
-    runValidators: true
-  })
-
-  returnSuccess(res, { user })
-})
-
-exports.deleteUser = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.user?._id, {
-    active: false
-  })
-
-  returnSuccess(res, {}, 204)
-})

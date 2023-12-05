@@ -1,35 +1,29 @@
-const { catchAsync } = require('./errorController')
 const Review = require('../db/reviewModel')
-const { returnSuccess } = require('../utils/responses')
-const queryBuilder = require('../db/query')
-const AppError = require('../utils/AppError')
+const factory = require('./handlerFactory')
 
-exports.getReviews = catchAsync(async (req, res, next) => {
-  const tour = req.params.tourId
-  const query = queryBuilder(Review, req.query, tour ? { tour } : {})
-  const reviews = await query
-
-  returnSuccess(res, { reviews }, 200, { results: reviews.length })
-})
-
-exports.getReviewById = catchAsync(async (req, res, next) => {
-  const review = Review.findById(req.params.id)
-
-  if (!review) {
-    return next(
-      new AppError(404, `No tour found for ID ${req.params.id}`)
-    )
+exports.addTourFilter = (req, res, next) => {
+  const { tourId } = req.params
+  if (tourId) {
+    req.body = {
+      ...req.body,
+      tour: tourId
+    }
   }
 
-  returnSuccess(res, { review })
-})
+  next()
+}
 
-exports.createReview = catchAsync(async (req, res, next) => {
-  const review = await Review.create({
-    ...req.body,
-    tour: req.params.tourId || req.body.tour,
-    author: req.user?._id
-  })
+exports.getReviews = factory.getMany(Review)
 
-  returnSuccess(res, { review }, 201)
-})
+exports.getReviewById = factory.getById(Review)
+
+exports.completeReviewData = (req, res, next) => {
+  req.body.tour = req.params.tourId || req.body.tour
+  req.body.author = req.user?._id
+
+  next()
+}
+
+exports.createReview = factory.createOne(Review)
+
+exports.deleteReview = factory.deleteOne(Review)
