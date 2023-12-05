@@ -3,10 +3,10 @@ const {
   returnSuccess,
   returnNotFound
 } = require('../utils/responses')
-const queryBuilder = require('../db/query')
+const queryFactory = require('../db/queryFacroty')
 
 exports.getMany = (Model, populateOptions = undefined) => catchAsync(async (req, res, next) => {
-  const query = queryBuilder(Model, req.query, req.body, populateOptions)
+  const query = queryFactory(Model, req.query, req.body, populateOptions)
   const docs = await query
 
   returnSuccess(res, { docs }, 200, { results: docs.length })
