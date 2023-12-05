@@ -1,3 +1,5 @@
+const AppError = require('./AppError')
+
 exports.returnSuccess = (res, data = {}, statusCode = 200, additionalFields = {}) => {
   res
     .status(statusCode)
@@ -17,3 +19,7 @@ exports.returnError = (res, err, status, statusCode) => {
       error: err
     })
 }
+
+exports.returnNotFound = (next, id) => next(
+  new AppError(404, `No document found for ID ${id}`)
+)
