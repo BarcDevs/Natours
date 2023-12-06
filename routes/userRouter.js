@@ -22,45 +22,25 @@ const {
 const routes = r.userRoutes
 const router = express.Router()
 
-// todo move route declaration to config
 router.post(routes.signup, signup)
 router.post(routes.login, login)
-
-router.patch(routes.updatePassword, protectRoute, updatePassword)
 router.post(routes.forgotPassword, forgotPassword)
 router.patch(routes.resetPassword, resetPassword)
 
-router.patch(routes.update, protectRoute, updateUserData)
-router.get(routes.getMe, protectRoute, getMe, getUserById)
-router.delete(routes.delete, protectRoute, deactivateUser)
+/* Protected routes */
+router.use(protectRoute)
 
-router.get(routes.reviews, protectRoute, getUserReviews)
+router.patch(routes.updatePassword, updatePassword)
+router.patch(routes.update, updateUserData)
+router.get(routes.getMe, getMe, getUserById)
+router.delete(routes.delete, deactivateUser)
+router.get(routes.reviews, getUserReviews)
+router.get('/:id', getUserById)
 
-router
-  .route('/:id')
-  .get(
-    protectRoute,
-    getUserById
-  )
-  .delete(
-    protectRoute,
-    restrictRoute('admin'),
-    deleteUser
-  )
+/* Routes for admin use only */
+router.use(restrictRoute('admin'))
 
-router
-  .route('/')
-  .get(
-    protectRoute,
-    restrictRoute('admin'),
-    getUsers
-  )
-//   .post(createUser)
-//
-// router
-//   .route('/:id')
-//   .get(getUserById)
-//   .patch(updateUser)
-//   .delete(deleteUser)
+router.delete('/:id', deleteUser)
+router.get(getUsers)
 
 module.exports = router

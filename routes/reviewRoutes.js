@@ -5,7 +5,8 @@ const {
   getReviewById,
   deleteReview,
   completeReviewData,
-  addTourFilter
+  addTourFilter,
+  updateReview
 } = require('../controllers/reviewController')
 const {
   protectRoute,
@@ -32,6 +33,7 @@ router
 router
   .route('/:id')
   .get(getReviewById)
-  .delete(protectRoute, deleteReview)
+  .patch(protectRoute, restrictRoute('user'), updateReview)
+  .delete(protectRoute, restrictRoute('user'), deleteReview)
 
 module.exports = router

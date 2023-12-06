@@ -23,10 +23,7 @@ router.use('/:tourId/reviews', reviewRouter)
 
 router
   .route('/')
-  .get(
-    protectRoute,
-    getTours
-  )
+  .get(getTours)
   .post(
     protectRoute,
     restrictRoute('admin', 'lead-guide'),
