@@ -100,6 +100,11 @@ const tourSchema = new Schema({
   toObject: { virtuals: true }
 })
 
+tourSchema.index({
+  price: 1,
+  ratingsAverage: -1
+})
+
 tourSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'guides',
