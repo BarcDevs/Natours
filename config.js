@@ -10,7 +10,8 @@ exports.routes = {
   toursRoutes: {
     top5: '/top-5',
     stats: '/stats',
-    monthlyPlan: '/monthly-plan'
+    monthlyPlan: '/monthly-plan',
+    getToursWithin: '/tours-within/:distance/center/:latlng/unit/:unit'
   },
   userRoutes: {
     signup: '/signup',

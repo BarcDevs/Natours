@@ -7,7 +7,8 @@ const {
   getTourById,
   updateTour,
   getToursStats,
-  getMonthlyPlan
+  getMonthlyPlan,
+  getToursWithin
 } = require('../controllers/tourController')
 const { routes: r } = require('../config')
 const {
@@ -45,6 +46,10 @@ router
     restrictRoute('admin', 'lead-guide', 'guide'),
     getMonthlyPlan
   )
+
+router
+  .route(routes.getToursWithin)
+  .get(getToursWithin)
 
 router
   .route('/:id')

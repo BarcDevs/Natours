@@ -100,11 +100,17 @@ const tourSchema = new Schema({
   toObject: { virtuals: true }
 })
 
+//region Indexes
 tourSchema.index({
   price: 1,
   ratingsAverage: -1
 })
+tourSchema.index({
+  'locations.coordinates': '2dsphere'
+})
+//endregion
 
+//region Middlewares
 tourSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'guides',
@@ -113,12 +119,20 @@ tourSchema.pre(/^find/, function(next) {
 
   next()
 })
+//endregion
 
+//region Virtuals
 tourSchema.virtual('reviews', {
   ref: 'Review',
   foreignField: 'tour',
   localField: '_id'
 })
+
+tourSchema.virtual('startLocation')
+  .get(function() {
+    return this.locations.find(location => location.day === 0) || null
+  })
+//endregion
 
 const Tour = model('Tour', tourSchema)
 

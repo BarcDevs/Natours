@@ -2,6 +2,10 @@ const Tour = require('../db/tourModel')
 const { catchAsync } = require('./errorController')
 const factory = require('./handlerFactory')
 const { returnSuccess } = require('../utils/responses')
+const AppError = require('../utils/AppError')
+
+const EARTH_RADIUS_KM = 6378.1
+const EARTH_RADIUS_MILES = 3963.2
 
 //region CONTROLLERS
 exports.aliasTopTours = (req, res, next) => {
@@ -77,5 +81,32 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
   ])
 
   returnSuccess(res, { monthlyPlan }, 201)
+})
+
+exports.getToursWithin = catchAsync(async (req, res, next) => {
+  const {
+    distance,
+    latlng,
+    unit
+  } = req.params
+  const [lat, lng] = latlng.split(',')
+  const radius = distance / (unit === 'mi' ? EARTH_RADIUS_MILES : EARTH_RADIUS_KM)
+
+  if (!lat || !lng) return next(new AppError(400, 'Please provide latitude and longitude in the format lat,lng'))
+
+  const tours = await Tour.find({
+    locations: {
+      $elemMatch: {
+        day: 0,
+        coordinates: {
+          $geoWithin: {
+            $centerSphere: [[lng, lat], radius]
+          }
+        }
+      }
+    }
+  })
+
+  returnSuccess(res, { tours }, 200, { results: tours.length })
 })
 //endregion
