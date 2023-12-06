@@ -5,12 +5,16 @@ if (!process.env.MONGODB_CONNECTION_URI) {
 }
 
 const db = require('../db')
-const { getToursFromFs } = require('./fs')
+const { getDataFromFs } = require('./fs')
 const Tour = require('../db/tourModel')
+const User = require('../db/userModel')
+const Review = require('../db/reviewModel')
 
 const deleteAllData = async () => {
   try {
     await Tour.deleteMany()
+    await User.deleteMany({email: /^(?!bar)/})
+    await Review.deleteMany()
     console.log('data deleted successfully')
   } catch (e) {
     console.error(e)
@@ -26,14 +30,19 @@ const moveStartLocationToLocations = data => data.map(tour => {
 })
 
 const importData = async () => {
-  let data = await getToursFromFs()
-  if (Object.keys(data[0])
+  const users = await getDataFromFs('users.json')
+  const reviews = await getDataFromFs('reviews.json')
+  let tours = await getDataFromFs('tours.json')
+
+  if (Object.keys(tours[0])
     .includes('startLocation')) {
-    data = moveStartLocationToLocations(data)
+    tours = moveStartLocationToLocations(tours)
   }
 
   try {
-    await Tour.create(data)
+    await User.create(users, {runValidators: false, validateBeforeSave: false})
+    await Tour.create(tours)
+    await Review.create(reviews)
     console.log('data imported successfully')
   } catch (e) {
     console.error(e)

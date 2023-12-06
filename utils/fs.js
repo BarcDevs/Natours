@@ -1,9 +1,10 @@
 const fs = require('fs')
 
-const getToursFromFs = () => JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours.json`, 'utf-8'))
-const tours = getToursFromFs()
+const getDataFromFs = path => JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/${path}`, 'utf-8'))
 
-exports.getToursFromFs = getToursFromFs
+const tours = getDataFromFs('tours.json')
+
+exports.getDataFromFs = getDataFromFs
 
 exports.tours = tours
 
