@@ -13,6 +13,11 @@ const filterUser = (userObj, fields) => Object.fromEntries(
     .filter(([key]) => fields.includes(key))
 )
 
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user._id
+  next()
+}
+
 exports.updateUserData = catchAsync(async (req, res, next) => {
   const {
     password,
@@ -42,5 +47,18 @@ exports.deactivateUser = catchAsync(async (req, res, next) => {
 })
 
 exports.getUsers = factory.getMany(User)
+
+exports.getUserById = factory.getById(User)
+
+exports.getUserReviews = catchAsync(async (req, res, next) => {
+  const {reviews} = await User
+    .findById(req.user._id)
+    .populate({
+      path: 'reviews',
+      select: '-__v'
+    })
+
+  returnSuccess(res, reviews)
+})
 
 exports.deleteUser = factory.deleteOne(User)

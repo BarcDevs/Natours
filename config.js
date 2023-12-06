@@ -20,8 +20,11 @@ exports.routes = {
     forgotPassword: '/forgotPassword',
     resetPassword: '/resetPassword',
 
+    getMe: '/me',
     update: '/updateUser',
-    delete: '/deleteUser'
+    delete: '/deleteUser',
+
+    reviews: '/reviews'
   },
   reviewRoutes: {
 

@@ -13,7 +13,10 @@ const {
   deactivateUser,
   getUsers,
   updateUserData,
-  deleteUser
+  deleteUser,
+  getUserReviews,
+  getMe,
+  getUserById
 } = require('../controllers/userController')
 
 const routes = r.userRoutes
@@ -28,10 +31,17 @@ router.post(routes.forgotPassword, forgotPassword)
 router.patch(routes.resetPassword, resetPassword)
 
 router.patch(routes.update, protectRoute, updateUserData)
+router.get(routes.getMe, protectRoute, getMe, getUserById)
 router.delete(routes.delete, protectRoute, deactivateUser)
+
+router.get(routes.reviews, protectRoute, getUserReviews)
 
 router
   .route('/:id')
+  .get(
+    protectRoute,
+    getUserById
+  )
   .delete(
     protectRoute,
     restrictRoute('admin'),
