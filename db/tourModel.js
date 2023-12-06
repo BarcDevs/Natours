@@ -1,4 +1,7 @@
-const { Schema, model } = require('mongoose')
+const {
+  Schema,
+  model
+} = require('mongoose')
 
 const tourSchema = new Schema({
   name: {
@@ -30,7 +33,8 @@ const tourSchema = new Schema({
     validate: {
       validator: rating => (!(rating < 1) && !(rating > 5)),
       message: 'rating must be between 1 and 5'
-    }
+    },
+    set: val => Math.round(val * 10) / 10
   },
   ratingsQuantity: {
     type: Number,
@@ -44,7 +48,7 @@ const tourSchema = new Schema({
     type: Number,
     default: 0,
     validate: {
-      validator: function (discount) {
+      validator: function(discount) {
         return discount < this.price
       },
       message: 'discount can\'t be greater than the price'
@@ -92,8 +96,8 @@ const tourSchema = new Schema({
     ref: 'User'
   }
 }, {
-  toJSON: {virtuals: true},
-  toObject: {virtuals: true}
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 })
 
 tourSchema.pre(/^find/, function(next) {

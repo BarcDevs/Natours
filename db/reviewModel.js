@@ -2,6 +2,7 @@ const {
   Schema,
   model
 } = require('mongoose')
+const Tour = require('./tourModel')
 
 const reviewSchema = new Schema({
   review: {
@@ -36,6 +37,31 @@ const reviewSchema = new Schema({
   toObject: { virtuals: true }
 })
 
+reviewSchema.index({
+  tour: 1,
+  author: 1
+}, {
+  unique: true
+})
+reviewSchema.index({ rating: -1 })
+
+reviewSchema.statics.calculateRatings = async function(tourID) {
+  const stats = (await this.aggregate([
+    { $match: { tour: tourID } },
+    {
+      $group: {
+        _id: '$tour',
+        ratings: { $sum: 1 },
+        avgRating: { $avg: '$rating' }
+      }
+    }
+  ]))[0]
+
+  await Tour.findByIdAndUpdate(tourID, {
+    ratingsQuantity: stats?.ratings || 0,
+    ratingsAverage: stats?.avgRating || 4.5
+  })
+}
 reviewSchema.pre(/^find/, function(next) {
   this
     // .populate({
@@ -49,6 +75,17 @@ reviewSchema.pre(/^find/, function(next) {
 
   next()
 })
+
+reviewSchema.post('save', function() {
+  this.constructor.calculateRatings(this.tour)
+})
+
+reviewSchema.post(/^findOneAnd/, async doc => {
+  if (doc) {
+    doc.constructor.calculateRatings(doc.tour)
+  }
+})
+
 const ReviewSchema = model('Review', reviewSchema)
 
 module.exports = ReviewSchema
