@@ -95,13 +95,10 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
   if (!lat || !lng) return next(new AppError(400, 'Please provide latitude and longitude in the format lat,lng'))
 
   const tours = await Tour.find({
-    locations: {
-      $elemMatch: {
-        day: 0,
-        coordinates: {
-          $geoWithin: {
-            $centerSphere: [[lng, lat], radius]
-          }
+    startLocation: {
+      coordinates: {
+        $geoWithin: {
+          $centerSphere: [[lng, lat], radius]
         }
       }
     }

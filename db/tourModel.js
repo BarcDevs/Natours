@@ -91,10 +91,20 @@ const tourSchema = new Schema({
     address: String,
     description: String
   }],
-  guides: {
+  startLocation: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point'
+    },
+    coordinates: [Number],
+    address: String,
+    description: String
+  },
+  guides: [{
     type: Schema.ObjectId,
     ref: 'User'
-  }
+  }]
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
@@ -104,6 +114,9 @@ const tourSchema = new Schema({
 tourSchema.index({
   price: 1,
   ratingsAverage: -1
+})
+tourSchema.index({
+  'startLocation.coordinates': '2dsphere'
 })
 tourSchema.index({
   'locations.coordinates': '2dsphere'
@@ -127,11 +140,6 @@ tourSchema.virtual('reviews', {
   foreignField: 'tour',
   localField: '_id'
 })
-
-tourSchema.virtual('startLocation')
-  .get(function() {
-    return this.locations.find(location => location.day === 0) || null
-  })
 //endregion
 
 const Tour = model('Tour', tourSchema)

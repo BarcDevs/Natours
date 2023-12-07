@@ -32,12 +32,12 @@ const moveStartLocationToLocations = data => data.map(tour => {
 const importData = async () => {
   const users = await getDataFromFs('users.json')
   const reviews = await getDataFromFs('reviews.json')
-  let tours = await getDataFromFs('tours.json')
+  const tours = await getDataFromFs('tours.json')
 
-  if (Object.keys(tours[0])
-    .includes('startLocation')) {
-    tours = moveStartLocationToLocations(tours)
-  }
+  // if (Object.keys(tours[0])
+  //   .includes('startLocation')) {
+  //   tours = moveStartLocationToLocations(tours)
+  // }
 
   try {
     await User.create(users, {runValidators: false, validateBeforeSave: false})
