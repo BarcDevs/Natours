@@ -1,12 +1,16 @@
 const apiEndpoint = '/api/v1'
 
 exports.endpoints = {
+  root: '/',
   toursEndpoint: `${apiEndpoint}/tours`,
   usersEndpoint: `${apiEndpoint}/users`,
   reviewsEndpoint: `${apiEndpoint}/reviews`
 }
 
 exports.routes = {
+  viewRoutes: {
+
+  },
   toursRoutes: {
     top5: '/top-5',
     stats: '/stats',

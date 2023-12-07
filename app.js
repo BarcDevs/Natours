@@ -6,10 +6,12 @@ const mongoSanitize = require('express-mongo-sanitize')
 const { xss } = require('express-xss-sanitizer')
 const morgan = require('morgan')
 const hpp = require('hpp')
+const path = require('path')
 const config = require('./config')
 const {
   tourRouter,
-  reviewRouter
+  reviewRouter,
+  viewRouter
 } = require('./routes')
 const { userRouter } = require('./routes')
 const {
@@ -24,6 +26,10 @@ const { endpoints } = config
 //endregion
 
 //region MIDDLEWARE
+app.set('view engine', 'pug')
+app.set('views', path.join(__dirname, 'views'))
+app.use(express.static(path.join(__dirname, 'public')))
+
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
@@ -43,13 +49,13 @@ app.use('/api', limiter)
 app.use(express.json({
   limit: '10kb'
 }))
-app.use(express.static(`${__dirname}/public`))
 app.use(hpp({
   whitelist: ['duration', 'ratingsAverage', 'price', 'ratingsQuantity', 'maxGroupSize', 'priceDiscount', 'difficulty']
 }))
 //endregion
 
 //region ROUTES
+app.use(endpoints.root, viewRouter)
 app.use(endpoints.toursEndpoint, tourRouter)
 app.use(endpoints.usersEndpoint, userRouter)
 app.use(endpoints.reviewsEndpoint, reviewRouter)
