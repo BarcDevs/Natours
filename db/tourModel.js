@@ -2,6 +2,7 @@ const {
   Schema,
   model
 } = require('mongoose')
+const slugify = require('slugify')
 
 const tourSchema = new Schema({
   name: {
@@ -104,7 +105,11 @@ const tourSchema = new Schema({
   guides: [{
     type: Schema.ObjectId,
     ref: 'User'
-  }]
+  }],
+  slug: {
+    type: String,
+    unique: true
+  }
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
@@ -115,6 +120,7 @@ tourSchema.index({
   price: 1,
   ratingsAverage: -1
 })
+tourSchema.index({ slug: 1 })
 tourSchema.index({
   'startLocation.coordinates': '2dsphere'
 })
@@ -130,6 +136,11 @@ tourSchema.pre(/^find/, function(next) {
     select: '-__v'
   })
 
+  next()
+})
+
+tourSchema.pre('save', function(next) {
+  this.slug = slugify(this.name, { lower: true })
   next()
 })
 //endregion
