@@ -11,7 +11,8 @@ exports.routes = {
     top5: '/top-5',
     stats: '/stats',
     monthlyPlan: '/monthly-plan',
-    getToursWithin: '/tours-within/:distance/center/:latlng/unit/:unit'
+    getToursWithin: '/tours-within/:distance/center/:latlng/unit/:unit',
+    getToursDistances: '/tours-distances/center/:latlng/unit/:unit'
   },
   userRoutes: {
     signup: '/signup',

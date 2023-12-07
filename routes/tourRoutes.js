@@ -52,6 +52,10 @@ router
   .get(getToursWithin)
 
 router
+  .route(routes.getToursDistances)
+  .get(getToursWithin)
+
+router
   .route('/:id')
   .get(protectRoute, getTourById)
   .patch(
