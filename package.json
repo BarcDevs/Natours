@@ -16,6 +16,7 @@
   "author": "bar",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "date-fns": "^2.30.0",

@@ -23,3 +23,7 @@ exports.renderTour = catchAsync(async (req, res, next) => {
 
   render(res, 'tour', `${tour.name} Tour`, { tour })
 })
+
+exports.renderLogin = (req, res) => {
+  render(res, 'login', 'Login')
+}

@@ -65,14 +65,14 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user) return
   const token = createToken(user._id)
 
-  res.cookie('jwt', tokenCookieOptions)
+  res.cookie('jwt', `Bearer ${tokenCookieOptions}`)
   returnSuccess(res, { user }, 200, { token })
 })
 
 exports.protectRoute = catchAsync(async (req, res, next) => {
-  const token = req.headers.authorization
+  const token = req.headers.authorization || req.cookies.jwt
 
-  /* Check if token exist */
+  /* Check if token is valid */
   if (!token?.startsWith('Bearer')) {
     return next(new AppError(401, 'You are not logged in! please log in to get access'))
   }
@@ -94,6 +94,28 @@ exports.protectRoute = catchAsync(async (req, res, next) => {
 
   /* User authenticated */
   req.user = user
+  next()
+})
+
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  const token = req.cookies.jwt
+
+  /* Check if token is valid */
+  if (!token?.startsWith('Bearer')) return next()
+
+  /* Validate token */
+  const decodedToken = await promisify(jwt.verify)(token.split(' ')[1], process.env.JWT_SECRET)
+
+  /* Check if user is still exist */
+  const user = await User.findById(decodedToken.id)
+    .select('+passwordLastChangeAt')
+  if (!user) return next()
+
+  /* Check if password has changed */
+  if (checkPasswordChanged(decodedToken.iat, user.passwordLastChangeAt)) return next()
+
+  /* User authenticated */
+  req.locals.user = user
   next()
 })
 
