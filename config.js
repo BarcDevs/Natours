@@ -9,7 +9,8 @@ exports.endpoints = {
 
 exports.routes = {
   viewRoutes: {
-
+    home: '/',
+    tourDetails: '/tour/:tourSlug'
   },
   toursRoutes: {
     top5: '/top-5',

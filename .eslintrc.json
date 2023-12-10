@@ -29,9 +29,15 @@
     "no-unused-vars": ["warn", { "argsIgnorePattern": "req|res|next|val" }]
   },
   "parserOptions": {
-    "ecmaVersion": "latest"
+    "ecmaVersion": "latest",
+    "sourceType": "module"
   },
   "env": {
     "es6": true
+  },
+  "ecmaFeatures": {
+    "modules": true,
+    "spread" : true,
+    "restParams" : true
   }
 }

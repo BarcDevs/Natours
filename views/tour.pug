@@ -48,18 +48,14 @@ block content
 
           each guide in tour.guides
             .overview-box__detail
-              img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
-
-              - if (guide.role === 'lead-guide')
-                span.overview-box__label Lead guide
-              - if (guide.role === 'guide')
-                span.overview-box__label Tour guide
+              img.overview-box__img(src=`/img/users/${guide.picture}`, alt=`${guide.name}`)
+              span.overview-box__label= `${guide.role === 'lead-guide' ? 'Lead' : 'Tour'} guide`
               span.overview-box__text= guide.name
 
     .description-box
       h2.heading-secondary.ma-bt-lg= `About ${tour.name} tour`
-      - const parapraphs = tour.description.split('\n');
-      each p in parapraphs
+      - const paragraphs = tour.description.split('\n');
+      each p in paragraphs
         p.description__text= p
 
   section.section-pictures
