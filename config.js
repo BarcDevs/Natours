@@ -24,6 +24,7 @@ exports.routes = {
   userRoutes: {
     signup: '/signup',
     login: '/login',
+    logout: '/logout',
 
     updatePassword: '/updatePassword',
     forgotPassword: '/forgotPassword',

@@ -69,6 +69,11 @@ exports.login = catchAsync(async (req, res, next) => {
   returnSuccess(res, { user }, 200, { token })
 })
 
+exports.logout = (req, res) => {
+  res.cookie('jwt', tokenCookieOptions)
+  returnSuccess(res)
+}
+
 exports.protectRoute = catchAsync(async (req, res, next) => {
   const token = req.headers.authorization || req.cookies.jwt
 
