@@ -1,5 +1,6 @@
 /* eslint-disable */
 import axios from 'axios'
+import { showAlert } from './alert'
 
 export const loginHandler = e => {
   e.preventDefault()
@@ -21,12 +22,13 @@ const login = async (email, password) => {
     })
 
     if (res.data.status === 'success') {
-      alert('You logged in successfully')
-      setTimeout(()=>{
+      showAlert('success', 'You logged in successfully')
+      window.setTimeout(() => {
         location.assign('/')
       }, 1500)
     }
   } catch (e) {
-    console.log(e.response.data.message || e)
+    showAlert('error', e.response.data.message || e.message)
+    console.log(e.response.data || e)
   }
 }
