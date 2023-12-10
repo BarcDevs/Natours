@@ -65,12 +65,12 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user) return
   const token = createToken(user._id)
 
-  res.cookie('jwt', `Bearer ${tokenCookieOptions}`)
+  res.cookie('jwt', `Bearer ${token}`, tokenCookieOptions)
   returnSuccess(res, { user }, 200, { token })
 })
 
 exports.logout = (req, res) => {
-  res.cookie('jwt', tokenCookieOptions)
+  res.cookie('jwt', 'loggedout', tokenCookieOptions)
   returnSuccess(res)
 }
 
@@ -102,27 +102,33 @@ exports.protectRoute = catchAsync(async (req, res, next) => {
   next()
 })
 
-exports.isLoggedIn = catchAsync(async (req, res, next) => {
-  const token = req.cookies.jwt
+exports.isLoggedIn = async (req, res, next) => {
+  try {
+    const token = req.cookies.jwt
 
-  /* Check if token is valid */
-  if (!token?.startsWith('Bearer')) return next()
+    /* Check if token is valid */
+    if (!token?.startsWith('Bearer')) return next()
 
-  /* Validate token */
-  const decodedToken = await promisify(jwt.verify)(token.split(' ')[1], process.env.JWT_SECRET)
+    /* Validate token */
+    const decodedToken = await promisify(jwt.verify)(token.split(' ')[1], process.env.JWT_SECRET)
 
-  /* Check if user is still exist */
-  const user = await User.findById(decodedToken.id)
-    .select('+passwordLastChangeAt')
-  if (!user) return next()
+    /* Check if user is still exist */
+    const user = await User.findById(decodedToken.id)
+      .select('+passwordLastChangeAt')
+    if (!user) return next()
 
-  /* Check if password has changed */
-  if (checkPasswordChanged(decodedToken.iat, user.passwordLastChangeAt)) return next()
+    /* Check if password has changed */
+    if (checkPasswordChanged(decodedToken.iat, user.passwordLastChangeAt)) return next()
 
-  /* User authenticated */
-  req.locals.user = user
-  next()
-})
+    /* User authenticated */
+    res.locals.user = user
+    next()
+  } catch (err) {
+    // eslint-disable-next-line no-unused-expressions
+    err.message !== 'invalid token' && console.log(err.message)
+    next()
+  }
+}
 
 exports.restrictRoute = (...roles) => (req, res, next) => {
   if (!roles.includes(req.user?.role)) {

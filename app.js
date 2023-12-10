@@ -54,7 +54,7 @@ app.use('/api', limiter)
 app.use(express.json({
   limit: '10kb'
 }))
-app.use(cookieParser)
+app.use(cookieParser())
 //endregion
 
 //region ROUTES

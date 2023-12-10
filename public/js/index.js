@@ -9,4 +9,5 @@ const mapBox = document.getElementById('map')
 
 loginForm && loginForm.addEventListener('submit', loginHandler)
 logoutBtn && logoutBtn.addEventListener('click', logout)
+// TODO sort out mapbox
 mapBox && displayMap(JSON.parse(mapBox.dataset.locations))

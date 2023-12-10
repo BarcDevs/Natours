@@ -26,7 +26,7 @@ const login = async (email, password) => {
       showAlert('success', 'You logged in successfully')
       window.setTimeout(() => {
         location.assign('/')
-      }, 1500)
+      }, 500)
     }
   } catch (e) {
     showAlert('error', e.response.data.message || e.message)
