@@ -33,7 +33,7 @@ const login = async (email, password) => {
   }
 }
 
-const logout = async () => {
+export const logout = async () => {
   try {
     const res = await axios({
       method: 'POST',
