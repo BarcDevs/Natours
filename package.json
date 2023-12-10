@@ -9,7 +9,9 @@
     "dev": "nodemon NODE_ENV=development server.js",
     "debug": "ndb server.js",
     "import-data": "node utils\\import-dev-data.js --import",
-    "delete-data": "node utils\\import-dev-data.js --delete"
+    "delete-data": "node utils\\import-dev-data.js --delete",
+    "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url ./",
+    "build:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url ./"
   },
   "author": "bar",
   "license": "ISC",
@@ -41,7 +43,8 @@
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.0.1",
-    "eslint-plugin-react": "^7.33.2"
+    "eslint-plugin-react": "^7.33.2",
+    "parcel-bundler": "^1.12.5"
   },
   "engines": {
     "node": ">=20.0.0"
