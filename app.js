@@ -2,6 +2,7 @@
 const express = require('express')
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
+const cookieParser = require('cookie-parser')
 const mongoSanitize = require('express-mongo-sanitize')
 const { xss } = require('express-xss-sanitizer')
 const morgan = require('morgan')
@@ -45,13 +46,15 @@ app.use(xss({
   allowedKeys: ['name']
 }))
 app.use(mongoSanitize())
-app.use('/api', limiter)
-app.use(express.json({
-  limit: '10kb'
-}))
 app.use(hpp({
   whitelist: ['duration', 'ratingsAverage', 'price', 'ratingsQuantity', 'maxGroupSize', 'priceDiscount', 'difficulty']
 }))
+app.use('/api', limiter)
+
+app.use(express.json({
+  limit: '10kb'
+}))
+app.use(cookieParser)
 //endregion
 
 //region ROUTES
