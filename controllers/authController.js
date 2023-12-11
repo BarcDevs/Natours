@@ -98,7 +98,7 @@ exports.protectRoute = catchAsync(async (req, res, next) => {
   }
 
   /* User authenticated */
-  req.user = user
+  res.locals.user = req.user = user
   next()
 })
 

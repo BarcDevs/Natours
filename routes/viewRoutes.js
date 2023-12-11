@@ -3,12 +3,19 @@ const { routes: r } = require('../config')
 const {
   renderOverview,
   renderTour,
-  renderLogin
+  renderLogin,
+  renderProfile,
+  renderMe
 } = require('../controllers/viewController')
-const { isLoggedIn } = require('../controllers/authController')
+const {
+ isLoggedIn,
+  protectRoute
+} = require('../controllers/authController')
 
 const router = express.Router()
 const routes = r.viewRoutes
+
+router.get(routes.me, protectRoute, renderMe)
 
 router.use(isLoggedIn)
 router.get(routes.home, renderOverview)

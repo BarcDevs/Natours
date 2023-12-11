@@ -30,3 +30,11 @@ exports.renderTour = catchAsync(async (req, res, next) => {
 exports.renderLogin = (req, res) => {
   render(res, 'login', 'Login')
 }
+
+// exports.renderProfile = (req, res) => {
+//   render(res, 'account', 'Login')
+// }
+
+exports.renderMe = (req, res) => {
+    render(res, 'account', 'Your profile')
+}

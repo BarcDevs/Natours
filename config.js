@@ -12,7 +12,8 @@ exports.routes = {
   viewRoutes: {
     home: '/',
     tourDetails: '/tour/:tourSlug',
-    login: '/login'
+    login: '/login',
+    me: '/me'
   },
   toursRoutes: {
     top5: '/top-5',
