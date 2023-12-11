@@ -40,7 +40,7 @@ export const logout = async () => {
       url: `${url}/logout`,
     })
 
-    if (res.data.status === 'success') location.reload(true)
+    if (res.data.status === 'success') location.assign('/login')
   } catch (e) {
     showAlert('error', e.response.data.message || e.message)
   }
