@@ -2,7 +2,7 @@ const { catchAsync } = require('./errorController')
 const AppError = require('../utils/AppError')
 const {
   routes,
-  allowedFields
+  userAllowedFields: allowedFields
 } = require('../config')
 const factory = require('./handlerFactory')
 const User = require('../db/userModel')

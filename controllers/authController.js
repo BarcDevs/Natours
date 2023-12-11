@@ -207,9 +207,8 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     currentPassword,
     newPassword,
     passwordConfirm,
-    data
   } = req.body
-  const user = await User.findById(data.user?._id)
+  const user = await User.findById(req.user?._id)
     .select('+password')
 
   if (!await user.matchPasswords(currentPassword, user.password)) {
