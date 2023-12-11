@@ -78,7 +78,7 @@ exports.protectRoute = catchAsync(async (req, res, next) => {
   const token = req.headers.authorization || req.cookies.jwt
 
   /* Check if token is valid */
-  if (!token?.startsWith('Bearer')) {
+  if (!(token && token.startsWith('Bearer'))) {
     return next(new AppError(401, 'You are not logged in! please log in to get access'))
   }
 
@@ -107,7 +107,7 @@ exports.isLoggedIn = async (req, res, next) => {
     const token = req.cookies.jwt
 
     /* Check if token is valid */
-    if (!token?.startsWith('Bearer')) return next()
+    if (!(token && token?.startsWith('Bearer'))) return next()
 
     /* Validate token */
     const decodedToken = await promisify(jwt.verify)(token.split(' ')[1], process.env.JWT_SECRET)
