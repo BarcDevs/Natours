@@ -17,7 +17,9 @@ const {
   deleteUser,
   getUserReviews,
   getMe,
-  getUserById
+  getUserById,
+  updateUserImage,
+  resizeUserImage
 } = require('../controllers/userController')
 
 const routes = r.userRoutes
@@ -33,7 +35,7 @@ router.patch(routes.resetPassword, resetPassword)
 router.use(protectRoute)
 
 router.patch(routes.updatePassword, updatePassword)
-router.patch(routes.update, updateUserData)
+router.patch(routes.update, updateUserImage, resizeUserImage, updateUserData)
 router.get(routes.getMe, getMe, getUserById)
 router.delete(routes.delete, deactivateUser)
 router.get(routes.reviews, getUserReviews)

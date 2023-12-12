@@ -1,3 +1,5 @@
+const multer = require('multer')
+const sharp = require('sharp')
 const { catchAsync } = require('./errorController')
 const AppError = require('../utils/AppError')
 const {
@@ -7,6 +9,45 @@ const {
 const factory = require('./handlerFactory')
 const User = require('../db/userModel')
 const { returnSuccess } = require('../utils/responses')
+
+const multerStorage = multer.memoryStorage()
+// multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, 'public/img/users')
+//   },
+//   filename: (req, file, cb) => {
+//     const ext = file.mimetype.split('/')[1]
+//     cb(null, `user-${req.user._id}-${Date.now()}.${ext}`)
+//   }
+// })
+
+const multerFilter = (req, file, cb) => {
+  if (!file.mimetype.startsWith('image'))
+    cb(new AppError(400, 'Not an image! please upload images only.'), false)
+  else
+    cb(null, true)
+}
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter
+})
+
+exports.updateUserImage = upload.single('picture')
+
+exports.resizeUserImage = (req, res, next) => {
+  if (!req.file) return next()
+
+  req.file.filename = `user-${req.user._id}-${Date.now()}.jpeg`
+
+  sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({quality: 90})
+    .toFile(`public/img/users/${req.file.filename}`)
+
+  next()
+}
 
 const filterUser = (userObj, fields) => Object.fromEntries(
   Object.entries(userObj)
@@ -29,7 +70,8 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
   }
 
   const user = await User.findByIdAndUpdate(req.user?._id, {
-    ...filterUser(req.body, allowedFields)
+    ...filterUser(req.body, allowedFields),
+    picture: req.file?.filename || undefined
   }, {
     new: true,
     runValidators: true
@@ -51,7 +93,7 @@ exports.getUsers = factory.getMany(User)
 exports.getUserById = factory.getById(User)
 
 exports.getUserReviews = catchAsync(async (req, res, next) => {
-  const {reviews} = await User
+  const { reviews } = await User
     .findById(req.user._id)
     .populate({
       path: 'reviews',
