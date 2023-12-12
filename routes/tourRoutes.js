@@ -8,7 +8,9 @@ const {
   updateTour,
   getToursStats,
   getMonthlyPlan,
-  getToursWithin
+  getToursWithin,
+  updateTourImages,
+  resizeTourImages
 } = require('../controllers/tourController')
 const { routes: r } = require('../config')
 const {
@@ -61,6 +63,8 @@ router
   .patch(
     protectRoute,
     restrictRoute('admin', 'lead-guide'),
+    updateTourImages,
+    resizeTourImages,
     updateTour
   )
   .delete(

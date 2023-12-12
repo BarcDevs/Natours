@@ -1,3 +1,5 @@
+const multer = require('multer')
+const sharp = require('sharp')
 const Tour = require('../db/tourModel')
 const { catchAsync } = require('./errorController')
 const factory = require('./handlerFactory')
@@ -8,6 +10,66 @@ const EARTH_RADIUS_KM = 6378.1
 const EARTH_RADIUS_MILES = 3963.2
 
 //region CONTROLLERS
+const multerStorage = multer.memoryStorage()
+
+const multerFilter = (req, file, cb) => {
+  if (!file.mimetype.startsWith('image')) {
+    cb(new AppError(400, 'Not an image! please upload images only.'), false)
+  } else {
+    cb(null, true)
+  }
+}
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter
+})
+
+exports.updateTourImages = upload.fields([
+  {
+    name: 'imageCover',
+    maxCount: 1
+  },
+  {
+    name: 'images',
+    maxCount: 3
+  }
+])
+
+exports.resizeTourImages = async (req, res, next) => {
+  if (!(req.files.imageCover || req.files.images)) return next()
+
+  const resolution = [2000, 1333]
+
+  await Promise.all(Object.entries(req.files)
+    .map(async ([name, images]) => {
+        await Promise.all(images.map(async (image, i) => {
+          const filename = `tour-${req.params.id}-${Date.now()}-${name === 'imageCover' ? 'cover' : i + 1}.jpeg`
+
+          await sharp(image.buffer)
+            .resize(...resolution)
+            .toFormat('jpeg')
+            .jpeg({ quality: 90 })
+            .toFile(`public/img/tours/${filename}`)
+
+          if (images.length === 1) {
+            req.body[name] = filename
+          } else {
+            // try to push filename to array. if undefined, make a new array
+            try {
+              req.body[name].push(filename)
+            } catch (e) {
+              req.body[name] = [filename]
+            }
+          }
+        }))
+      }
+    )
+  )
+
+  next()
+}
+
 exports.aliasTopTours = (req, res, next) => {
   req.query = {
     ...req.query,
