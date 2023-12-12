@@ -6,13 +6,13 @@ import { showAlert } from './alert'
 const url = 'http://localhost:8080/api/v1/users'
 export const handleUpdateData = async e => {
   e.preventDefault()
-  const name = document.getElementById('name').value
-  const email = document.getElementById('email').value
 
-  await update('data', {
-    name,
-    email
-  })
+  const form = new FormData()
+  form.append('name', document.getElementById('name').value)
+  form.append('email', document.getElementById('email').value)
+  form.append('picture', document.getElementById('photo').files[0])
+
+  await update('data', form)
 }
 
 export const handleUpdatePass = async e => {
