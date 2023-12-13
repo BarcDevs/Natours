@@ -11,18 +11,16 @@ class Email {
   }
 
   createTransport() {
-    if (process.env.NODE_ENV === 'development') {
+    const devMode = process.env.NODE_ENV === false
       return nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
+        host: process.env[`${devMode ? 'MAILTRAP' : 'ELASTICMAIL'}_HOST`],
+        port: process.env[`${devMode ? 'MAILTRAP' : 'ELASTICMAIL'}_PORT`],
         auth: {
-          user: process.env.EMAIL_USERNAME,
-          pass: process.env.EMAIL_PASSWORD
+          user: process.env[`${devMode ? 'MAILTRAP' : 'ELASTICMAIL'}_USERNAME`],
+          pass: process.env[`${devMode ? 'MAILTRAP' : 'ELASTICMAIL'}_PASSWORD`]
         }
       })
     }
-    // email with sendgrid
-  }
 
   async send(template, subject) {
     const html = renderFile(`${__dirname}/../views/email/${template}.pug`, {
