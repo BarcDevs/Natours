@@ -32,7 +32,7 @@ const userSchema = new Schema({
   passwordConfirm: String,
   picture: {
     type: String,
-    default: 'public/img/users/default.jpg'
+    default: 'default.jpg'
   },
   passwordLastChangeAt: {
     type: Date,
