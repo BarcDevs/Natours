@@ -27,6 +27,25 @@ const app = express()
 const { endpoints } = config
 //endregion
 
+//region Options
+const limiter = rateLimit({
+  max: process.env.MAX_REQUEST_LIMIT,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests. try again later'
+})
+
+const helmetOptions = {
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ['\'self\'', 'checkout.stripe.com', 'js.stripe.com', 'api.mapbox.com', 'events.mapbox.com', 'ws://localhost:53088'],
+      scriptSrc: ['\'self\'', 'checkout.stripe.com', 'js.stripe.com', 'api.mapbox.com', 'ws://localhost:53088'],
+      workerSrc: ['\'self\'', 'blob:'],
+      imgSrc: ['\'self\'', 'blob:', 'data:']
+    }
+  }
+}
+//endregion
+
 //region MIDDLEWARE
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
@@ -36,13 +55,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
 
-const limiter = rateLimit({
-  max: process.env.MAX_REQUEST_LIMIT,
-  windowMs: 60 * 60 * 1000,
-  message: 'Too many requests. try again later'
-})
-
-app.use(helmet())
+app.use(helmet(helmetOptions))
 app.use(xss({
   allowedKeys: ['name']
 }))
