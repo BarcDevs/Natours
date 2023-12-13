@@ -18,4 +18,4 @@ userForm && userForm.addEventListener('submit', handleUpdateData)
 passForm && passForm.addEventListener('submit', handleUpdatePass)
 bookBtn && bookBtn.addEventListener('click', handleBookTour)
 // TODO sort out mapbox
-mapBox && displayMap(JSON.parse(mapBox.dataset.locations))
+// mapBox && displayMap(JSON.parse(mapBox.dataset.locations))
