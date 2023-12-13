@@ -55,6 +55,12 @@ exports.signup = catchAsync(async (req, res) => {
   })
   const token = createToken(newUser._id)
 
+  const profileUrl = `${req.protocol}://${req.get('host')}${routes.viewRoutes.me}`
+  try {
+      await new Email(newUser, profileUrl).sendWelcome()
+  } catch (e) {
+      console.log(e.message)
+  }
   newUser.password = undefined
   res.cookie('jwt', tokenCookieOptions)
   returnSuccess(res, { user: newUser }, 201, { token })
