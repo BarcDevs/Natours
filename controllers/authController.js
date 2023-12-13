@@ -62,7 +62,7 @@ exports.signup = catchAsync(async (req, res) => {
       console.log(e.message)
   }
   newUser.password = undefined
-  res.cookie('jwt', tokenCookieOptions)
+  res.cookie('jwt', `Bearer ${token}`, tokenCookieOptions)
   returnSuccess(res, { user: newUser }, 201, { token })
 })
 
