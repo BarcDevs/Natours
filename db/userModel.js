@@ -30,7 +30,10 @@ const userSchema = new Schema({
     select: false
   },
   passwordConfirm: String,
-  picture: String,
+  picture: {
+    type: String,
+    default: 'public/img/users/default.jpg'
+  },
   passwordLastChangeAt: {
     type: Date,
     default: Date.now(),
@@ -55,8 +58,8 @@ const userSchema = new Schema({
     select: false
   }
 }, {
-  toJSON: {virtuals: true},
-  toObject: {virtuals: true}
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 })
 
 //region Middlewares
