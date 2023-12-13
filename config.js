@@ -5,7 +5,8 @@ exports.endpoints = {
   root: '/',
   toursEndpoint: `${apiEndpoint}/tours`,
   usersEndpoint: `${apiEndpoint}/users`,
-  reviewsEndpoint: `${apiEndpoint}/reviews`
+  reviewsEndpoint: `${apiEndpoint}/reviews`,
+  bookingsEndpoint: `${apiEndpoint}/bookings`,
 }
 
 exports.routes = {

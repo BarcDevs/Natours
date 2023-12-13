@@ -12,7 +12,8 @@ const config = require('./config')
 const {
   tourRouter,
   reviewRouter,
-  viewRouter
+  viewRouter,
+  bookingRouter
 } = require('./routes')
 const { userRouter } = require('./routes')
 const {
@@ -62,6 +63,7 @@ app.use(endpoints.root, viewRouter)
 app.use(endpoints.toursEndpoint, tourRouter)
 app.use(endpoints.usersEndpoint, userRouter)
 app.use(endpoints.reviewsEndpoint, reviewRouter)
+app.use(endpoints.bookingsEndpoint, bookingRouter)
 
 // not found handler
 app.all('*', notFound)
