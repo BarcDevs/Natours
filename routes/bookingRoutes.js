@@ -7,6 +7,6 @@ const router = express.Router({
 })
 
 router
-  .get('/checkout/:tourID', protectRoute, getCheckoutSession)
+  .post('/checkout/:tourID', protectRoute, getCheckoutSession)
 
 module.exports = router
