@@ -13,7 +13,8 @@ exports.routes = {
     home: '/',
     tourDetails: '/tour/:tourSlug',
     login: '/login',
-    me: '/me'
+    me: '/me',
+    reset: '/resetPassword'
   },
   toursRoutes: {
     top5: '/top-5',

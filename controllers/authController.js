@@ -11,7 +11,7 @@ const {
   routes,
   userAllowedFields: allowedFields
 } = require('../config')
-const sendMail = require('../utils/email')
+const Email = require('../utils/email')
 
 const tokenCookieOptions = {
   expires: addDays(Date.now(), process.env.JWT_EXPIRES_IN.slice(0, -1)),
@@ -147,17 +147,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const resetToken = user.generateResetPasswordToken()
   await user.save()
 
-  const resetURL = `${req.protocol}://${req.get('host')}${endpoints.usersEndpoint}/forgotPassword/${resetToken}`
-  const emailMessage = `Forgot your password? Submit a PATCH request to the following url with a new password and passwordConfirm.
-  ${resetURL}
-If you didn't forgot your password, please ignore this message.`
+  const resetURL = `${req.protocol}://${req.get('host')}${endpoints.usersEndpoint}/${routes.userRoutes.resetPassword}/${resetToken}`
 
   try {
-    await sendMail({
-      email: user.email,
-      subject: 'Your password reset token (valid for 10 min)',
-      message: emailMessage
-    })
+    await new Email(user, resetURL).sendResetPassword()
 
     returnSuccess(res, {}, 200, { message: 'Token sent to your email' })
   } catch (err) {
