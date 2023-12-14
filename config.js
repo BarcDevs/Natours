@@ -6,7 +6,7 @@ exports.endpoints = {
   toursEndpoint: `${apiEndpoint}/tours`,
   usersEndpoint: `${apiEndpoint}/users`,
   reviewsEndpoint: `${apiEndpoint}/reviews`,
-  bookingsEndpoint: `${apiEndpoint}/bookings`,
+  bookingsEndpoint: `${apiEndpoint}/bookings`
 }
 
 exports.routes = {
@@ -40,9 +40,7 @@ exports.routes = {
 
     reviews: '/reviews'
   },
-  reviewRoutes: {
-
-  }
+  reviewRoutes: {}
 }
 
 exports.userAllowedFields = ['name', 'email']

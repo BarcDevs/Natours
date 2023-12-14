@@ -2,6 +2,7 @@
 const express = require('express')
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
+const compression = require('compression')
 const cookieParser = require('cookie-parser')
 const mongoSanitize = require('express-mongo-sanitize')
 const { xss } = require('express-xss-sanitizer')
@@ -69,6 +70,7 @@ app.use(express.json({
   limit: '10kb'
 }))
 app.use(cookieParser())
+app.use(compression())
 //endregion
 
 //region ROUTES
