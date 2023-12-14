@@ -13,11 +13,11 @@ const {
 } = require('../config')
 const Email = require('../utils/email')
 
-const tokenCookieOptions = {
+const tokenCookieOptions = req => ({
   expires: addDays(Date.now(), process.env.JWT_EXPIRES_IN.slice(0, -1)),
   httpOnly: true,
-  secure: process.env.NODE_ENV !== 'development'
-}
+  secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+})
 
 const createToken = id => jwt.sign({ id }, process.env.JWT_SECRET, {
   expiresIn: process.env.JWT_EXPIRES_IN
@@ -62,7 +62,7 @@ exports.signup = catchAsync(async (req, res) => {
       console.log(e.message)
   }
   newUser.password = undefined
-  res.cookie('jwt', `Bearer ${token}`, tokenCookieOptions)
+  res.cookie('jwt', `Bearer ${token}`, tokenCookieOptions(req))
   returnSuccess(res, { user: newUser }, 201, { token })
 })
 
@@ -71,12 +71,12 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user) return
   const token = createToken(user._id)
 
-  res.cookie('jwt', `Bearer ${token}`, tokenCookieOptions)
+  res.cookie('jwt', `Bearer ${token}`, tokenCookieOptions(req))
   returnSuccess(res, { user }, 200, { token })
 })
 
 exports.logout = (req, res) => {
-  res.cookie('jwt', 'loggedout', tokenCookieOptions)
+  res.cookie('jwt', 'loggedout', tokenCookieOptions(req))
   returnSuccess(res)
 }
 
