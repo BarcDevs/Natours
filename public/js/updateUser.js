@@ -3,7 +3,7 @@
 import axios from 'axios'
 import { showAlert } from './alert'
 
-const url = 'http://localhost:8080/api/v1/users'
+const url = '/api/v1/users'
 export const handleUpdateData = async e => {
   e.preventDefault()
 

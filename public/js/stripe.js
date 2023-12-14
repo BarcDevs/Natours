@@ -13,10 +13,9 @@ export const handleBookTour = e => {
 const bookTour = async tourID => {
   try {
     const res = await axios
-      .post(`http://localhost:8080/api/v1/bookings/checkout/${tourID}`)
+      .post(`/api/v1/bookings/checkout/${tourID}`)
     location.assign(res.data.session.url)
   } catch (err) {
-    console.log(err)
     showAlert('error', err.message)
   }
 }

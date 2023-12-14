@@ -1,7 +1,7 @@
 const apiEndpoint = '/api/v1'
 
 exports.endpoints = {
-  url: 'http://localhost:8080/',
+  // url: 'http://localhost:8080/',
   root: '/',
   toursEndpoint: `${apiEndpoint}/tours`,
   usersEndpoint: `${apiEndpoint}/users`,
