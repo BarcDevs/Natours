@@ -86,6 +86,6 @@ reviewSchema.post(/^findOneAnd/, async doc => {
   }
 })
 
-const ReviewSchema = model('Review', reviewSchema)
+const Review = model('Review', reviewSchema)
 
-module.exports = ReviewSchema
+module.exports = Review
