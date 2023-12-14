@@ -41,18 +41,6 @@
     "stripe": "^14.8.0",
     "validator": "^13.11.0"
   },
-  "devDependencies": {
-    "eslint": "^8.54.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-airbnb": "^0.0.1-security",
-    "eslint-plugin-import": "^2.29.0",
-    "eslint-plugin-jsx-a11y": "^6.8.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "eslint-plugin-react": "^7.33.2",
-    "parcel-bundler": "^1.12.5"
-  },
   "engines": {
     "node": ">=20.0.0"
   }
