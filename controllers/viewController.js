@@ -1,6 +1,7 @@
 const { catchAsync } = require('./errorController')
 const Tour = require('../db/tourModel')
 const AppError = require('../utils/AppError')
+const { find } = require('../db/bookingModel')
 
 const render = (res, path, title, data = {}) => res.status(200)
   .render(path, {
@@ -36,5 +37,14 @@ exports.renderLogin = (req, res) => {
 // }
 
 exports.renderMe = (req, res) => {
-    render(res, 'account', 'Your profile')
+  render(res, 'account', 'Your profile')
 }
+
+exports.renderMyBookings = catchAsync(async (req, res, next) => {
+  const bookings = await find({ user: req.user.id })
+
+  const tourIDs = bookings.map(el => el.tour)
+  const tours = Tour.find({ _id: { $in: tourIDs } })
+
+  render(res, 'overview', 'My Bookings', { tours })
+})

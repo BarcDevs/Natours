@@ -15,7 +15,8 @@ exports.routes = {
     tourDetails: '/tour/:tourSlug',
     login: '/login',
     me: '/me',
-    reset: '/resetPassword'
+    reset: '/reset-password',
+    myBookings: '/my-bookings'
   },
   toursRoutes: {
     top5: '/top-5',
