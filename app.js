@@ -1,5 +1,6 @@
 //region REQUIRE
 const express = require('express')
+const cors = require('cors')
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
 const compression = require('compression')
@@ -56,6 +57,8 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
 
+app.use(cors())
+app.options('*', cors())
 app.use(helmet(helmetOptions))
 app.use(xss({
   allowedKeys: ['name']
