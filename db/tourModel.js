@@ -73,6 +73,7 @@ const tourSchema = new Schema({
     type: [String],
     default: []
   },
+  // todo make every date an instance which contains participant, soldOut, etc
   startDates: {
     type: [Date],
     default: []

@@ -1,6 +1,7 @@
 const Review = require('../db/reviewModel')
 const factory = require('./handlerFactory')
 
+// todo restrict only user who bought a tour can review it
 exports.addTourFilter = (req, res, next) => {
   const { tourId } = req.params
   if (tourId) {
