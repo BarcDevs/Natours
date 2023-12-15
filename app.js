@@ -69,6 +69,9 @@ app.use(hpp({
 }))
 app.use('/api', limiter)
 
+app.post('/webhook-checkout', express.raw({ type: '*/*' }))
+
+/* body parser */
 app.use(express.json({
   limit: '10kb'
 }))
