@@ -22,6 +22,7 @@ const {
   notFound,
   errorHandler
 } = require('./controllers/errorController')
+const { webhookCheckout } = require('./controllers/bookingController')
 //endregion
 
 //region CONFIG
@@ -69,7 +70,7 @@ app.use(hpp({
 }))
 app.use('/api', limiter)
 
-app.post('/webhook-checkout', express.raw({ type: '*/*' }))
+app.post('/webhook-checkout', express.raw({ type: '*/*' }), webhookCheckout)
 
 /* body parser */
 app.use(express.json({
